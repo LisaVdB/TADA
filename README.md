@@ -1,4 +1,4 @@
-# TRIPP
+# TADA
 Transcriptional activation domain prediction using deep learning
 
 ## Table of content
