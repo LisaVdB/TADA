@@ -4,6 +4,7 @@ Transcriptional activation domain prediction using deep learning.
 ## Table of content
 * [Architecture](#Architecture)
 * [Installation](#Installation)
+* [Usage](#Usage)
 * [Publications](#Publications)
 
 ## Architecture
@@ -24,6 +25,8 @@ Set up the following environment
 * localcider 0.1.19
 * pandas 2.0.0
 * openTSNE 0.7.1
+* shap 0.41.0
+* seaborn 0.12.2
 
 ```
 conda create -n tada python=3.10.6
@@ -35,7 +38,17 @@ pip install localcider
 pip install protfasta
 pip install alphaPredict
 conda install --channel conda-forge opentsne
+pip install shap
+pip install seaborn
 ```
+
+## Usage
+### Making predictions
+
+### Train TADA with your own set
+
+### Perfrom SHAP and clustering
+
 
 ## Publications
 S. Mahatma*, L. Van den Broeck*, N. Morffy, M. V. Staller, L. C. Strader and R. Sozzani, "Prediction and functional characterization of transcriptional activation domains," 2023 57th Annual Conference on Information Sciences and Systems (CISS), Baltimore, MD, USA, 2023, pp. 1-6, doi: 10.1109/CISS56502.2023.10089768.
