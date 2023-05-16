@@ -1,7 +1,5 @@
 import numpy as np
 import tensorflow as tf
-
-np.random.seed(1258)  # reproducibility
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout
 from keras.layers import Conv1D, Bidirectional, LSTM, Layer
@@ -10,6 +8,8 @@ import keras.backend as K
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 from loss import focal_loss
+
+np.random.seed(1258)  # reproducibility
 
 class attention(Layer):
     def __init__(self, return_sequences=True):
@@ -58,7 +58,7 @@ def create_model(SHAPE, kernel_size=2, filters=100, activation_function = 'gelu'
     model.add(attention())
     
     model.add(Bidirectional(LSTM(bilstm_output_size, return_sequences=True))) # Creates Long short term memory RNN and applies a bidirectional wrapper on it
-    model.add(Bidirectional(LSTM(bilstm_output_size))) # again
+    model.add(Bidirectional(LSTM(bilstm_output_size))) 
     model.add(Dense(2, activation="softmax")) 
     opt = Adam(learning_rate=learning_rate)
     loss_function = focal_loss(alpha = 0.45)
