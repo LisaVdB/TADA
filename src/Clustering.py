@@ -4,12 +4,9 @@ Created on Thu May  4 10:44:10 2023
 
 @author: lisav
 """
-import os
-os.chdir("D:/Google_Drive/Post-doc\\Project_ARFs\\ARFs\\Classification_TRIPP\\src\\")
 
 import csv
 from pickle import load
-#from sklearn.decomposition import PCA
 from sklearn.decomposition import KernelPCA
 import numpy as np
 import pandas as pd
@@ -19,7 +16,6 @@ import seaborn as sns
 import openTSNE
 from Preprocessing import scale_features
 from Preprocessing import class1_extractions
-#from sklearn.decomposition import *
 
 plt.rcParams['figure.dpi'] = 600
 save_path_file = "../data/clustering/"
@@ -45,7 +41,7 @@ shap_values = load(open('../data/SHAP/shap_values_class1_ADs_plantonlydata.pkl',
 class1_shap_values = shap_values[0]
 
 '''
-Select top 8 / 17  important features
+Select top 8  important features
 
 '''
 NUM_FEAT = 8
@@ -64,7 +60,6 @@ class1_features_sub = class1_features[:,:,list(map(int, list(idx)))]
 class1_shap_values_sub = class1_shap_values[:,:,list(map(int, list(idx)))]
 
 class1_features_sub = scale_features(class1_features_sub)
-#class1_shap_values_sub = scale_features(class1_shap_values_sub)
 
 '''
 Perform PCA
@@ -86,15 +81,6 @@ def clustering(features, shap_values, n_components = 10, FEATURES = 8, n_cluster
     
     features_flat = np.zeros((features.shape[0], 1, FEATURES))
     for i in range(FEATURES):
-        #pca = PCA(n_components=1, svd_solver='full')
-        #pca2 = pca.fit_transform(features[:, :, i]) 
-        #print(pca.explained_variance_ratio_)
-        #svd = TruncatedSVD(n_components=1, algorithm='randomized', random_state=0) 
-        #svd2 = svd.fit_transform(features[:, :, i]) 
-        #print(svd.explained_variance_ratio_)
-        #Ipca = IncrementalPCA(n_components=1) 
-        #Ipca2 = Ipca.fit_transform(features[:, :, i]) 
-        #print(Ipca.explained_variance_ratio_)
         kpca = KernelPCA(n_components=1, random_state=2) 
         kpca2 = kpca.fit_transform(features[:, :, i]) 
         print(kpca.eigenvalues_)
@@ -108,11 +94,9 @@ def clustering(features, shap_values, n_components = 10, FEATURES = 8, n_cluster
     shap_values_flat = pd.DataFrame(shap_values_flat)
     
     concat = np.concatenate((shap_values_flat, features_flat), axis = 1)
-    #concat = features_flat
     
     pca = KernelPCA(n_components, random_state=2) 
     concat_10 = pca.fit_transform(concat)
-    #print(pca.explained_variance_ratio_)
     
     pcaInit = concat_10[:,:2] / np.std(concat_10[:,0]) * 0.0001
 
@@ -147,13 +131,12 @@ def figure_tsne(tsne_result, label = None):
     
     return fig
 
-#create list to hold SSE values for each k
 def elowplot(tsne_result):
     '''
 
     Parameters
     ----------
-    tsne_result : a 2D arrat
+    tsne_result : a 2D array
 
     Returns
     -------
@@ -177,7 +160,7 @@ def elowplot(tsne_result):
 
 tsne_result, label = clustering(class1_features_sub, class1_shap_values_sub, FEATURES = 8, n_clusters = 6)
 figure = figure_tsne(tsne_result, label)
-elbow = elowplot(tsne_result)
+elowplot(tsne_result)
 
 data_class1 = np.array(data)[class1_idx]
 data_class1 = data_class1[:, [1,2,4]]
@@ -189,4 +172,3 @@ data_tsne = data_tsne.join(pd.DataFrame(data_class1, columns = ['name', 'scale_s
 data_tsne.to_csv(save_path_file + "tsne-clustering_6clusters_noSHAP.csv")
 
 figure.savefig(save_path_file + 't-sne_6clusters_noSHAP.pdf',dpi=600)
-elbow.savefig(save_path_file + 't-sne_kmeans_elbow.pdf',dpi=600)
