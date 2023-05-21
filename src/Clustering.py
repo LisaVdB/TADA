@@ -171,6 +171,6 @@ data_tsne = pd.DataFrame(tsne_result, columns = ['tsne-1', 'tsne-2']).join(pd.Da
 data_tsne = data_tsne.join(pd.DataFrame(class1_idx, columns = ['idx']))
 data_tsne = data_tsne.join(pd.DataFrame(data_class1, columns = ['name', 'scale_score', 'sequence']))
 
-data_tsne.to_csv(save_path_file + "tsne-clustering.csv")
+data_tsne.to_csv(save_path_file + "tsne-clustering_6clusters.csv")
 
 figure.savefig(save_path_file + 't-sne_6clusters.pdf',dpi=600)
