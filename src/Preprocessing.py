@@ -11,7 +11,6 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from localcider.sequenceParameters import SequenceParameters
 import alphaPredict as alpha
 
-# Returns the middle 30AA sequences from longer sequences
 def split_seq(sequences, labels, position, length_out = 40, length_min = 20):
     '''
 
@@ -63,13 +62,13 @@ def create_features(sequences, SEQUENCE_WINDOW = 5, STEPS = 1, LENGTH = 40, PROP
     Parameters
     ----------
     sequences : List. 
-        List of sequences with max length of 30AA.
+        List of sequences with max length of 40AA.
     SEQUENCE_WINDOW : Int, optional
         DESCRIPTION. The default is 5.
     STEPS : Int, optional
         DESCRIPTION. The default is 1.
     PROPERTIES : Int, optional
-        DESCRIPTION. The default is 21.
+        DESCRIPTION. The default is 42.
 
     Returns
     -------
