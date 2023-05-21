@@ -19,7 +19,9 @@ from Preprocessing import class1_extractions
 
 plt.rcParams['figure.dpi'] = 600
 save_path_file = "../data/clustering/"
-
+if not os.path.exists(save_path_file):
+     os.mkdir(save_path_file)
+        
 '''
 Load scaled features and select class 1
 
@@ -27,13 +29,13 @@ Load scaled features and select class 1
 print("Load features, AD class, and shap values")
 features = load(open('../data/features_OnlyPlants.pkl', 'rb'))
 
-with open('../data/TrainingsData_OnlyPlants.csv', 'r') as csv_file:
+with open('../data/TrainingsData.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     data = []
     for i in csv_reader:
-        data.append([i[0], i[2], i[4], i[5], i[6]])
+        data.append([i[0], i[1], i[2], i[3], i[4]])
 data.pop(0)
-ad_class = np.double(np.array(data)[:, 3])
+ad_class = np.double(np.array(data)[:, 4])
 
 class1_features, class1_idx = class1_extractions(ad_class, features)
 
@@ -169,6 +171,6 @@ data_tsne = pd.DataFrame(tsne_result, columns = ['tsne-1', 'tsne-2']).join(pd.Da
 data_tsne = data_tsne.join(pd.DataFrame(class1_idx, columns = ['idx']))
 data_tsne = data_tsne.join(pd.DataFrame(data_class1, columns = ['name', 'scale_score', 'sequence']))
 
-data_tsne.to_csv(save_path_file + "tsne-clustering_6clusters_noSHAP.csv")
+data_tsne.to_csv(save_path_file + "tsne-clustering.csv")
 
-figure.savefig(save_path_file + 't-sne_6clusters_noSHAP.pdf',dpi=600)
+figure.savefig(save_path_file + 't-sne_6clusters.pdf',dpi=600)
