@@ -6,8 +6,6 @@ Created on Wed May 10 16:49:01 2023
 """
 
 import os
-os.chdir("D:/Google_Drive/Post-doc/Project_ARFs/ARFs/Classification_TRIPP/src")
-
 import csv
 from pickle import load
 import numpy as np
@@ -22,7 +20,7 @@ save_file_path = "../data/clustering/"
 Create array of the features for each of the five clusters
 
 '''
-with open('../data/clustering/tsne-clustering_5clusters.csv', 'r') as csv_file:
+with open('../data/clustering/tsne-clustering.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     data = []
     for i in csv_reader:
@@ -34,6 +32,7 @@ cluster2 = []
 cluster3 = []
 cluster4 = []
 cluster5 = []
+cluster6 = []
 
 for i in range(len(data)):
     if data[i][0] == "0":
@@ -46,6 +45,8 @@ for i in range(len(data)):
         cluster4.append(data[i])
     if data[i][0] == "4":
         cluster5.append(data[i])
+    if data[i][0] == "5":
+        cluster6.append(data[i])
         
 features = load(open('../data/features_OnlyPlants.pkl', 'rb'))
 
@@ -54,6 +55,7 @@ features_c2 = scale_features(features[list(map(int, list(np.array(cluster2)[:,1]
 features_c3 = scale_features(features[list(map(int, list(np.array(cluster3)[:,1])))])
 features_c4 = scale_features(features[list(map(int, list(np.array(cluster4)[:,1])))])
 features_c5 = scale_features(features[list(map(int, list(np.array(cluster5)[:,1])))])
+features_c6 = scale_features(features[list(map(int, list(np.array(cluster6)[:,1])))])
 
 '''
 Run SHAP on each of the five clusters
@@ -64,7 +66,7 @@ model = create_model(SHAPE = (36, 42))
 print('\x1b[2K\tModel created')
 
 model_weights_path = '../data/model-results-notest/checkpoints/'
-model.load_weights(model_weights_path + 'tripp.14-0.02.hdf5')
+model.load_weights(model_weights_path + 'tada.14-0.02.hdf5')
 print('\x1b[2K\tWeights loaded')
 
 e = shap.GradientExplainer(model, features_c1)
@@ -77,7 +79,8 @@ e = shap.GradientExplainer(model, features_c4)
 shap_values_c4 = e.shap_values(features_c4)
 e = shap.GradientExplainer(model, features_c5)
 shap_values_c5 = e.shap_values(features_c5)
-
+e = shap.GradientExplainer(model, features_c6)
+shap_values_c6 = e.shap_values(features_c6)
 
 '''
 Compute and visualize average feature across subsequences for the five clusters
@@ -103,6 +106,7 @@ feature_importance_avg_c2, feature_importance_c2 = shap_average(shap_values_c2)
 feature_importance_avg_c3, feature_importance_c3 = shap_average(shap_values_c3)
 feature_importance_avg_c4, feature_importance_c4 = shap_average(shap_values_c4)
 feature_importance_avg_c5, feature_importance_c5 = shap_average(shap_values_c5)
+feature_importance_avg_c6, feature_importance_c6 = shap_average(shap_values_c6)
 
 data = pd.DataFrame(feature_importance_c1)
 data.to_csv(save_file_path + "feature-importance-c1.csv")
@@ -114,6 +118,8 @@ data = pd.DataFrame(feature_importance_c4)
 data.to_csv(save_file_path + "feature-importance-c4.csv")
 data = pd.DataFrame(feature_importance_c5)
 data.to_csv(save_file_path + "feature-importance-c5.csv")
+data = pd.DataFrame(feature_importance_c6)
+data.to_csv(save_file_path + "feature-importance-c6.csv")
 
 data = pd.DataFrame(feature_importance_avg_c1)
 data.to_csv(save_file_path + "feature-importance-avg-c1.csv")
@@ -125,3 +131,5 @@ data = pd.DataFrame(feature_importance_avg_c4)
 data.to_csv(save_file_path + "feature-importance-avg-c4.csv")
 data = pd.DataFrame(feature_importance_avg_c5)
 data.to_csv(save_file_path + "feature-importance-avg-c5.csv")
+data = pd.DataFrame(feature_importance_avg_c6)
+data.to_csv(save_file_path + "feature-importance-avg-c6.csv")
