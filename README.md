@@ -4,7 +4,7 @@ Transcriptional activation domain prediction using deep learning.
 ## Table of content
 * [Architecture](#Architecture)
 * [Installation](#Installation)
-* [Usage](#Usage)
+* [Approach](#Approach)
 * [Publications](#Publications)
 
 ## Architecture
@@ -42,16 +42,14 @@ pip install shap
 pip install seaborn
 ```
 
-## Usage
+## Approach
 ### Preprocessing and model training
 All sequences from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Sequences were split into a 90%-10% train-validation proportion to retrain TADA for final predictions.
 
-
 ### Making predictions
+To make predictions with TADA, use the Predictions.py script. In case the sequences are longer than 40 amino acids, use the split_seq() function from the Preprocessing.py script. 
 
-
-### Train TADA with your own set
-
+### SHAP analysis and clustering
 
 
 
