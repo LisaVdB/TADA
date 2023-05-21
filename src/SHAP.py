@@ -5,8 +5,6 @@ Created on Mon Apr 24 19:04:14 2023
 @author: lisav
 """
 import os
-os.chdir("D:/Google_Drive/Post-doc/Project_ARFs/ARFs/Classification_TRIPP/src")
-
 from Model import create_model
 from Preprocessing import class1_extractions
 from Preprocessing import scale_features
@@ -22,14 +20,16 @@ np.random.seed(1258)  # for reproducibility
 Import data
 '''
 save_file_path = '../data/SHAP/'
-
-with open('../data/TrainingsData_OnlyPlants.csv', 'r') as csv_file:
+if not os.path.exists(save_file_path):
+    os.mkdir(save_file_path)
+        
+with open('../data/TrainingsData.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     data = []
     for i in csv_reader:
-        data.append([i[0], i[2], i[4], i[5], i[6]])
+        data.append([i[0], i[1], i[2], i[3], i[4]])
 data.pop(0)
-ad_class = np.double(np.array(data)[:, 3])
+ad_class = np.double(np.array(data)[:, 4])
 
 features = load(open('../data/features_OnlyPlants.pkl', 'rb'))
 
@@ -52,13 +52,10 @@ model_weights_path = '../data/model-results-notest/checkpoints/'
 model.load_weights(model_weights_path + 'tripp.14-0.02.hdf5')
 print('\x1b[2K\tWeights loaded')
 
-predictions = model.predict(class1_features)
-
-dump(predictions, open('predictions_class1_ADs_plantonlydata.pkl', 'wb'))
-predictions = load(open('predictions_class1_ADs_plantonlydata.pkl', 'rb'))
 
 '''
 Run SHAP
+
 '''
 X_test = class1_features[:10]
 
@@ -77,7 +74,6 @@ for sequence in shap_values[0]:
             feature_importance[i]+=abs(window[i])
 
 data = pd.DataFrame(feature_importance)
-#data.columns = ["index", "predictions"]
 data.to_csv(save_file_path + "feature-importance-average.csv")
 
 #Calculate the sum of each feature across the 36 winows -- keep sequences for variance
@@ -86,5 +82,4 @@ for sequence in shap_values[0]:
     feature_importance.append(np.sum(abs(sequence), axis = 0))
 
 data = pd.DataFrame(feature_importance)
-#data.columns = ["index", "predictions"]
 data.to_csv(save_file_path + "feature-importance.csv")
