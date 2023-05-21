@@ -50,7 +50,7 @@ print('Calculating features!')
 features = create_features(sequences, SEQUENCE_WINDOW, STEPS, LENGTH)
 
 # Save the features and activation scores
-dump(features, open('features.pkl', 'wb'))
+dump(features, open('features_OnlyPlants.pkl', 'wb'))
 
 # Split sequences in training and testing data
 X_train, X_test, y_train, y_test = train_test_split(features, y, random_state = 42, test_size=0.1, stratify = y)
