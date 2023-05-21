@@ -10,18 +10,16 @@ import numpy as np
 from pickle import dump
 import os
 from sklearn.model_selection import train_test_split
-
-os.chdir("D:/Google_Drive/Post-doc/Project_ARFs/ARFs/Classification_TRIPP/src")
-
 from Preprocessing import scale_features
 from Preprocessing import create_features
 
 np.random.seed(1258)  # for reproducibility
-save_file_path = '../data/'
+save_file_path = '../data/split-train-val-test/'
+if not os.path.exists(save_file_path):
+     os.mkdir(save_file_path)
 
 '''
-Data contains four distinct datasets 
-Oversampling of minority class from plant datasets 
+Data contains two datasets 
 
 '''
 print('Loading data')
@@ -29,21 +27,12 @@ with open('../data/TrainingsData.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     data = []
     for i in csv_reader:
-        data.append([i[0], i[2], i[4], i[5], i[6]])
+        data.append([i[0], i[1], i[2], i[3], i[4]])
 data.pop(0)
 
-print('Oversample Plant ADs')
-count = 0
-data_oversamples = []
-for i in data:
-    if (i[0] == "1" or i[0] == "5") and (i[3] == "1"):
-        count = count + 1
-        data_oversamples.append(i)
-data = data + data_oversamples + data_oversamples
-
-sequences = [i[4] for i in data]
+sequences = [i[2] for i in data]
 data = np.array(data)
-y0 = np.double(data[:, 3])
+y0 = np.double(data[:, 4])
 y = np.column_stack([y0, 1 - y0])
 
 '''
@@ -74,14 +63,11 @@ X_val_scaled = scale_features(X_val)
 print(X_train_scaled[0].shape)
 
 print('Saving train-validation-test sequences and labels')
-if not os.path.exists(save_file_path):
-     os.mkdir(save_file_path)
+np.savez_compressed(save_file_path + 'train-features-scaled.npz', X_train_scaled)
+np.savez_compressed(save_file_path + 'train-labels.npz', y_train)
 
-np.savez_compressed(save_file_path + 'split-train-val-test/train-features-scaled.npz', X_train_scaled)
-np.savez_compressed(save_file_path + 'split-train-val-test/train-labels.npz', y_train)
+np.savez_compressed(save_file_path + 'validation-features-scaled.npz', X_val_scaled)
+np.savez_compressed(save_file_path + 'validation-labels.npz', y_val)
 
-np.savez_compressed(save_file_path + 'split-train-val-test/validation-features-scaled.npz', X_val_scaled)
-np.savez_compressed(save_file_path + 'split-train-val-test/validation-labels.npz', y_val)
-
-np.savez_compressed(save_file_path + 'split-train-val-test/test-features-scaled.npz', X_test_scaled)
-np.savez_compressed(save_file_path + 'split-train-val-test/test-labels.npz', y_test)
+np.savez_compressed(save_file_path + 'test-features-scaled.npz', X_test_scaled)
+np.savez_compressed(save_file_path + 'test-labels.npz', y_test)
