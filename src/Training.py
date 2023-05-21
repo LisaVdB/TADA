@@ -57,7 +57,7 @@ def main():
     model.summary()
     
     history = History()
-    model_checkpoint = ModelCheckpoint(filepath = save_file_path + 'checkpoints/tripp.{epoch:02d}-{val_loss:.2f}.hdf5',\
+    model_checkpoint = ModelCheckpoint(filepath = save_file_path + 'checkpoints/tada.{epoch:02d}-{val_loss:.2f}.hdf5',\
             save_weights_only=True,\
                 monitor='val_loss',\
                     mode='auto',\
@@ -80,7 +80,7 @@ def main():
                         epochs=20, verbose=1, callbacks=callbacks,
                         class_weight = d_class_weights,
                         validation_data=(val_seq, val_label))
-    model.save('classification_tripp.h5')
+    model.save('classification_tada.h5')
 
     
     # Plot metrics
