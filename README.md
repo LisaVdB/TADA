@@ -43,11 +43,16 @@ pip install seaborn
 ```
 
 ## Usage
+### Preprocessing and model training
+All sequences from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Sequences were split into a 90%-10% train-validation proportion to retrain TADA for final predictions.
+
+
 ### Making predictions
+
 
 ### Train TADA with your own set
 
-### Perfrom SHAP and clustering
+
 
 
 ## Publications
