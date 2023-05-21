@@ -44,14 +44,13 @@ pip install seaborn
 
 ## Approach
 ### Preprocessing and model training
-All sequences from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Sequences were split into a 90%-10% train-validation proportion to retrain TADA for final predictions.
+All fragments from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Fragments were split into a 90%-10% train-validation proportion to retrain TADA for final predictions.
 
 ### Making predictions
 To make predictions with TADA, use the Predictions.py script. In case the sequences are longer than 40 amino acids, use the split_seq() function from the Preprocessing.py script. 
 
 ### SHAP analysis and clustering
-
-
+To rank the features according to impact to predict ADs, use the SHAP.py script. To identify AD subtypes by clustering the AD fragments, use the Clustering.py script. The clustering of the AD fragments depends on the computed features and SHAP values. 
 
 ## Publications
 S. Mahatma*, L. Van den Broeck*, N. Morffy, M. V. Staller, L. C. Strader and R. Sozzani, "Prediction and functional characterization of transcriptional activation domains," 2023 57th Annual Conference on Information Sciences and Systems (CISS), Baltimore, MD, USA, 2023, pp. 1-6, doi: 10.1109/CISS56502.2023.10089768.
