@@ -24,7 +24,7 @@ def main():
     '''
     
     # change last folder name by respective batches
-    save_file_path = '../data/model-results/'
+    save_file_path = '../data/model-results_OnlyPlants/'
     
     if not os.path.exists(save_file_path):
         os.mkdir(save_file_path)
