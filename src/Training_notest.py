@@ -24,7 +24,7 @@ def main():
     '''
     
     # change last folder name by respective batches
-    save_file_path = '../data/model-results/'
+    save_file_path = '../data/model-results-notest/'
     
     if not os.path.exists(save_file_path):
         os.mkdir(save_file_path)
@@ -41,18 +41,18 @@ def main():
     val_seq = [] 
     val_label = []
     
-    train_seq = np.load('../data/split-train-val-test/train-features-scaled.npz')['arr_0']
-    train_label = np.load('../data/split-train-val-test/train-labels.npz')['arr_0']
+    train_seq = np.load('../data/split-train-val/train-features-scaled.npz')['arr_0']
+    train_label = np.load('../data/split-train-val/train-labels.npz')['arr_0']
     
-    val_seq = np.load('../data/split-train-val-test/validation-features-scaled.npz')['arr_0']
-    val_label = np.load('../data/split-train-val-test/validation-labels.npz')['arr_0']
+    val_seq = np.load('../data/split-train-val/validation-features-scaled.npz')['arr_0']
+    val_label = np.load('../data/split-train-val/validation-labels.npz')['arr_0']
 
     # Create and train the model
     model = create_model(train_seq[0].shape)
     model.summary()
     
     history = History()
-    model_checkpoint = ModelCheckpoint(filepath = save_file_path + 'checkpoints/tripp.{epoch:02d}-{val_loss:.2f}.hdf5',\
+    model_checkpoint = ModelCheckpoint(filepath = save_file_path + 'checkpoints/tada.{epoch:02d}-{val_loss:.2f}.hdf5',\
             save_weights_only=True,\
                 monitor='val_loss',\
                     mode='auto',\
@@ -75,6 +75,6 @@ def main():
                         epochs=20, verbose=1, callbacks=callbacks,
                         class_weight = d_class_weights,
                         validation_data=(val_seq, val_label))
-    model.save('classification_tripp.h5')
+    model.save('classification_tada.h5')
 
 
