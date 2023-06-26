@@ -27,6 +27,7 @@ Set up the following environment
 * openTSNE 0.7.1
 * shap 0.41.0
 * seaborn 0.12.2
+* biopython
 
 ```
 conda create -n tada python=3.10.6
@@ -40,11 +41,12 @@ pip install alphaPredict
 conda install --channel conda-forge opentsne
 pip install shap
 pip install seaborn
+pip install biopython
 ```
 
 ## Approach
 ### Preprocessing and model training
-All fragments from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Fragments were split into a 90%-10% train-validation proportion to retrain TADA for final predictions.
+All fragments from our experimental datasets (TrainingsData.csv) were preprocessed and split into training, validation, and test set in the Save_train-test-split.py script, which uses custom build functions from the Preprocessing.py script. TADA was trained using the Training.py script. The performance metrics for the test set were presented in the manuscript. Fragments were split into a 90%-10% train-validation proportion to retrain TADA for final predictions. Tiles created for the training datasets as well as prediction datasets were generated using the Tiling.py script, which inputs a fasta file and outputs the 40-aa tiles in a .csv file.
 
 ### Making predictions
 To make predictions with TADA, use the Predictions.py script. In case the sequences are longer than 40 amino acids, use the split_seq() function from the Preprocessing.py script. 
