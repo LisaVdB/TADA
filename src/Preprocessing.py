@@ -11,6 +11,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from localcider.sequenceParameters import SequenceParameters
 import alphaPredict as alpha
 
+# Returns the middle 30AA sequences from longer sequences
 def split_seq(sequences, labels, position, length_out = 40, length_min = 20):
     '''
 
@@ -62,13 +63,13 @@ def create_features(sequences, SEQUENCE_WINDOW = 5, STEPS = 1, LENGTH = 40, PROP
     Parameters
     ----------
     sequences : List. 
-        List of sequences with max length of 40AA.
+        List of sequences with max length of 30AA.
     SEQUENCE_WINDOW : Int, optional
         DESCRIPTION. The default is 5.
     STEPS : Int, optional
         DESCRIPTION. The default is 1.
     PROPERTIES : Int, optional
-        DESCRIPTION. The default is 42.
+        DESCRIPTION. The default is 21.
 
     Returns
     -------
@@ -148,14 +149,13 @@ def scale_y(y):
     dump(scaler, open('scaler_y.pkl', 'wb'))
     y_scaled = scaler.fit_transform(y.reshape(-1,1))
     return y_scaled
-
 # Scale features
-def scale_features(features: np.ndarray) -> np.ndarray:
+def scale_features(features: np.ndarray, SEQUENCE_WINDOW = 5, STEPS = 1, LENGTH = 40) -> np.ndarray:
     '''
     Parameters
     ----------
     features : np.ndarray
-    Takes the output of create_features() and scales the values per feature column.
+        Takes the output of create_features() and scales the values per feature column.
 
     Returns
     -------
@@ -166,17 +166,53 @@ def scale_features(features: np.ndarray) -> np.ndarray:
     scaler = StandardScaler()
     scaler2 = MinMaxScaler()
     
-    dump(scaler, open('scaler_normal_features.pkl', 'wb'))
-    dump(scaler2, open('scaler_minmax_features.pkl', 'wb'))
+    scaled_array_copy = deepcopy(features)
+    n, m = features[0].shape
+    scaler_metric = np.array(np.zeros((len(features[0][0]), 7)))
+
+    for i in range(m):
+        results = scaler.fit_transform(scaled_array_copy[:,:,i].reshape(-1,1)).reshape(-1)
+        scaler_metric[i, :3] = np.array([scaler.mean_, scaler.var_, scaler.scale_]).reshape(-1)
+        results = scaler2.fit_transform(results.reshape(-1,1)).reshape(-1)
+        scaler_metric[i, 3:7] = np.array([scaler2.min_, scaler2.data_min_, scaler2.data_max_, scaler2.scale_]).reshape(-1)
+        results = results.reshape((len(features),int((LENGTH-SEQUENCE_WINDOW)/STEPS+1)))
+        for j, result in enumerate(results):
+            scaled_array_copy[j,:,i] = result
+            
+    dump(scaler_metric, open('scaler_metric.arr', 'wb'))
+    
+    return scaled_array_copy
+
+# Scale features for prediction
+def scale_features_predict(features: np.ndarray, SEQUENCE_WINDOW = 5, STEPS = 1, LENGTH = 40) -> np.ndarray:
+    '''
+    Parameters
+    ----------
+    features : np.ndarray
+        Takes the output of create_features() and scales the values per feature column.
+
+    Returns
+    -------
+    scaled_array_copy : TYPE
+        DESCRIPTION.
+
+    '''
+    scaler = StandardScaler()
+    scaler2 = MinMaxScaler()
     
     scaled_array_copy = deepcopy(features)
     n, m = features[0].shape
+    scaler_metric = np.load('scaler_metric.arr', allow_pickle=True)
+
     for i in range(m):
-        results = scaler.fit_transform(scaled_array_copy[:,:,i].reshape(-1,1)).reshape(-1)
-        results = scaler2.fit_transform(results.reshape(-1,1)).reshape(-1)
-        results = results.reshape((len(features),36))
+        scaler.mean_, scaler.var_, scaler.scale_, scaler.n_samples_seen_ = scaler_metric[i,:4]
+        results = scaler.transform(scaled_array_copy[:,:,i].reshape(-1,1)).reshape(-1)
+        scaler2.min_, scaler2.data_min_, scaler2.data_max_, scaler2.scale_, scaler2.n_samples_seen_, scaler2.data_range_ = scaler_metric[i, 4:10]
+        results = scaler2.transform(results.reshape(-1,1)).reshape(-1)
+        results = results.reshape((len(features),int((LENGTH-SEQUENCE_WINDOW)/STEPS+1)))
         for j, result in enumerate(results):
             scaled_array_copy[j,:,i] = result
+    
     return scaled_array_copy
 
 #extracts sequences from class 1
