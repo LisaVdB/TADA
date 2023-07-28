@@ -1,4 +1,4 @@
-from Preprocessing import scale_features
+from Preprocessing import scale_features_predict
 from Preprocessing import create_features
 from Preprocessing import split_seq
 from Model import create_model
@@ -45,7 +45,7 @@ LENGTH = 40
 #sequences = sequences_40aa[0]
 
 features = create_features(sequences, SEQUENCE_WINDOW, STEPS)
-features_scaled = scale_features(features)
+features_scaled = scale_features_predict(features)
 
 # Save the features
 dump(features_scaled, open(save_file_path + 'features_scaled.pkl', 'wb'))
