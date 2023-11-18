@@ -168,17 +168,17 @@ def scale_features(features: np.ndarray, SEQUENCE_WINDOW = 5, STEPS = 1, LENGTH 
     
     scaled_array_copy = deepcopy(features)
     n, m = features[0].shape
-    scaler_metric = np.array(np.zeros((len(features[0][0]), 7)))
+    scaler_metric = np.array(np.zeros((len(features[0][0]), 10)))
 
     for i in range(m):
         results = scaler.fit_transform(scaled_array_copy[:,:,i].reshape(-1,1)).reshape(-1)
-        scaler_metric[i, :3] = np.array([scaler.mean_, scaler.var_, scaler.scale_]).reshape(-1)
+        scaler_metric[i, :4] = np.array([scaler.mean_, scaler.var_, scaler.scale_, scaler.n_samples_seen_]).reshape(-1)
         results = scaler2.fit_transform(results.reshape(-1,1)).reshape(-1)
-        scaler_metric[i, 3:7] = np.array([scaler2.min_, scaler2.data_min_, scaler2.data_max_, scaler2.scale_]).reshape(-1)
+        scaler_metric[i, 4:10] = np.array([scaler2.min_, scaler2.data_min_, scaler2.data_max_, scaler2.scale_, scaler2.n_samples_seen_, scaler2.data_range_]).reshape(-1)
         results = results.reshape((len(features),int((LENGTH-SEQUENCE_WINDOW)/STEPS+1)))
         for j, result in enumerate(results):
             scaled_array_copy[j,:,i] = result
-            
+    
     dump(scaler_metric, open('scaler_metric.arr', 'wb'))
     
     return scaled_array_copy
