@@ -9,7 +9,7 @@ Transcriptional activation domain prediction using deep learning.
 * [Publications](#Publications)
 
 ## Update
-This repository maintains TADA as it was released for the manuscript "Identification of plant transcriptional activation domains" by Morffy et al. An updated version compatible with Tensorflow2 also has been released. The Tensorflow2 version of TADA is available here: https://github.com/ryanemenecker/TADA_T2 well as a Google Colab implementation. If users wish to generate TADA predictions without installing the TADA model loclly, the Google Colab notebook facilitates this.
+This repository maintains TADA as it was released for the manuscript "Identification of plant transcriptional activation domains" by Morffy et al. An updated version has been released and is available at https://github.com/ryanemenecker/TADA_T2. This repository also contains a Google Colab implementation for users that wish to generate TADA predictions without installing the TADA model loclly.
 
 ## Architecture
 To classify protein sequence as an AD, we used a neural network architecture that contains: 
